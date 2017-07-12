@@ -12,6 +12,8 @@ Basic grammar:
 
 */
 
+let lSystem;
+
 d3.select("#svg-container").append("svg:svg").attr("width", 600).attr("height", 600).attr("id", "svg");
 
 let system = {
@@ -20,8 +22,12 @@ let system = {
   axiom: null,
   r1: null,
   r2: null,
-  angle: null
+  angle: null,
+  rules: []
 }
+
+//f-f++f+f-f-f-f-f++f+f-f-f-f-f++f+f-f-f-f-f++f+f-f-f-f-f++f+f-f-f
+//f-f++f+f-f-ff-f-f++f+f-f-ff-f-f++f+f-f-ff-f-f++f+f-f-ff-f-f++f+f-f-ff
 
 class LSystem{
   constructor(system){
@@ -32,11 +38,11 @@ class LSystem{
     this.res = system.axiom;
     this.lines = [];
     this.dir = 0;
-    this.length = 10;
-    this.head = {x:150,y:250}
+    this.length = 20;
+    this.head = {x:150,y:150}
     this.locationStack = [];
-    let rule1 = this.system.r1.split("=");
-    this.rule1 = {t: rule1[0],v:rule1[1]}
+    this.rules = system.rules;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     this.xDim = {min:this.head.x,max:this.head.x}
     this.yDim = {min:this.head.y,max:this.head.y}
@@ -44,8 +50,7 @@ class LSystem{
 
   runIterationsAndReturnLines(count = this.iterations){
     for(let i = 0; i< count; i++){
-      console.log("iteration " + i+1)
-      this.res = this.iterate();
+      this.res = this.iterate(this.res);
     }
     return this.generateLines(this.res);
   }
@@ -54,21 +59,35 @@ class LSystem{
     let acc = ""
     //takes the res string and applies the rules
     str.split("").forEach((el)=>{
-      if(el===this.rule1.t) {acc+=this.rule1.v}
-      else{acc+=el}
+      let ruleApplied = false;
+      for(let i=0; i< this.rules.length; i++){
+        let rule = this.rules[i];
+        console.log(`Rule: ${rule.t}, el: ${el}`)
+          if(el === rule.t){
+            ruleApplied = true;
+            acc += rule.v;
+          }else{
+
+            if(i>= this.rules.length-1 && !ruleApplied) acc += el;
+          }
+      }
+      console.log("acc is " + acc)
     })
-    console.log(acc);
-    return acc
+    console.log(acc)
+    return acc;
   }
+
+  //-F+F-F-F+F+F+F-F-F+F-F+F-F-F+F-F+F-F-F+F+F+F-F-F+F right response
+  //----F+F-F-F+F++F+F-F-F+F--F+F-F-F+F--F+F-F-F+F++F+F-F-F+F
 
   //the rendering function
   generateLines(str=this.res){
     str.split("").forEach((el,i)=>{
       if(el==="+") this.dir += this.angle;
-      if(el==="-") this.dir -= this.angle;
-      if(el==="[") this.locationStack.push(Object.assign({}, this.head));
-      if(el==="]") this.head = this.locationStack.pop();
-      if(el==="F" || el==="f") {
+      else if(el==="-") this.dir -= this.angle;
+      else if(el==="[") this.locationStack.push(Object.assign({}, this.head));
+      else if(el==="]") this.head = this.locationStack.pop();
+      else if(el==="F" || el==="f") {
         //create line from current position to next, then move the current pos to next
 
         let nextX = this.head.x + this.length*Math.cos(this.dir);
@@ -109,22 +128,36 @@ class LSystem{
     d3.select("#svg").selectAll("line").data(data).enter()
     .insert("line")
     .attr("stroke", "rgba(0,0,0,0.3)")
-    .attr("x1", (d,i)=>d.x1-midX)
-    .attr("x2", (d,i)=>d.x2-midX)
-    .attr("y1", (d,i)=>d.y1-midY)
-    .attr("y2", (d,i)=>d.y2-midY)
+    .attr("x1", (d,i)=>d.x1-this.xDim.min)
+    .attr("x2", (d,i)=>d.x2-this.xDim.min)
+    .attr("y1", (d,i)=>d.y1-this.yDim.min)
+    .attr("y2", (d,i)=>d.y2-this.yDim.min)
   }
 }
 
 $("#system-form").on("submit", function(e){
+  d3.select("#svg").selectAll("*").remove();
+  system = {
+    iterations: 0,
+    constants: null,
+    axiom: null,
+    r1: null,
+    r2: null,
+    angle: null,
+    rules: []
+  }
   e.preventDefault();
   $("input").each(function(index, field){
+    if(field.name[0]=== "r"){
+      let rule = field.value.toLowerCase().split("=");
+      system.rules.push({t:rule[0],v:rule[1]})
+    }
+    if(typeof field.value === "string") field.value = field.value.toLowerCase();
     system[field.name] = field.value;
   });
 
-  let l = new LSystem(system);
-  let lines = l.runIterationsAndReturnLines();
-  l.render(l.lines,"#svg");
-  console.log(l)
-
+  lSystem = new LSystem(system);
+  let lines = lSystem.runIterationsAndReturnLines();
+  lSystem.render(lSystem.lines,"#svg");
+  console.dir(lSystem)
 });

@@ -10,11 +10,11 @@
   <body>
     <div id="left-panel">
       <form id="system-form" action="index.html" method="post">
-        <span><label class="form-label">Iterations</label><input name= "iterations" class="form-input" id="iterations" type="number" ></span>
-        <span><label class="form-label">Axiom</label><input name= "axiom" class="form-input" id="axiom" type="text" ></span>
-        <span><label class="form-label">Rule 1</label><input name= "r1" id="r1" class="form-input" type="text" ></span>
-        <span><label class="form-label">Rule 2</label><input name= "r2" id="r2" class="form-input" type="text" ></span>
-        <span><label class="form-label">Angle</label><input name= "angle" id="angle" class="form-input" type="text" ></span>
+        <span><label class="form-label">Iterations</label><input value=2 name= "iterations" class="form-input" id="iterations" type="number" ></span>
+        <span><label class="form-label">Axiom</label><input value="-f" name= "axiom" class="form-input" id="axiom" type="text" ></span>
+        <span><label class="form-label">Rule 1</label><input value="F=F+F-AF-F+F" name= "r1" id="r1" class="form-input" type="text" ></span>
+        <span><label class="form-label">Rule 2</label><input value = "A=F-F" name= "r2" id="r2" class="form-input" type="text" ></span>
+        <span><label class="form-label" >Angle</label><input value=78 name= "angle" id="angle" class="form-input" type="text" ></span>
         <button type="submit">Generate your L-System</button>
       </form>
       <p>Grammar: F , + , - , [ , ]</p>
