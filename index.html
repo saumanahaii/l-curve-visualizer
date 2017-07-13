@@ -8,21 +8,47 @@
 
   </head>
   <body>
-    <div id="left-panel">
-      <form id="system-form" action="index.html" method="post">
-        <span><label class="form-label">Iterations</label><input value=2 name= "iterations" class="form-input" id="iterations" type="number" ></span>
-        <span><label class="form-label">Axiom</label><input value="-f" name= "axiom" class="form-input" id="axiom" type="text" ></span>
-        <span><label class="form-label">Rule 1</label><input value="F=F+F-AF-F+F" name= "r1" id="r1" class="form-input" type="text" ></span>
-        <span><label class="form-label">Rule 2</label><input value = "A=F-F" name= "r2" id="r2" class="form-input" type="text" ></span>
-        <span><label class="form-label" >Angle</label><input value=78 name= "angle" id="angle" class="form-input" type="text" ></span>
-        <button type="submit">Generate your L-System</button>
-      </form>
-      <p>Grammar: F , + , - , [ , ]</p>
-      <h2>What are L-Systems?</h2>
-      <p>A cool type of recursive grapher powered by a grammar parser and simple rules.</p>
-      <p>L-systems take in strings.  Those strings contain letters and symbols that the computer knows how to act on.  The actions control the motion of a point on the screen.  Classically, this is known as Turtle graphics.</p>
+    <div id="top">
+    <h1> D3 L System Grapher</h1><a href="http://www.zachwilliams.xyz"><h2>Go to creator's site</h2></a><h3>By Zach Williams</h3></div>
+    <div class="row">
+      <div id="left-panel">
+        <form id="system-form" action="index.html" method="post">
+
+          <span><label class="form-label">Axiom</label><input value="-f" name= "axiom" class="form-input" id="axiom" type="text" required></span>
+          <span><label class="form-label">Rule 1</label><input value="F=F+F-AF-F+F" name= "r1" id="r1" class="form-input" type="text" required></span>
+          <span><label class="form-label">Rule 2</label><input name= "r2" id="r2" class="form-input" type="text" ></span>
+          <span><label class="form-label">Rule 3</label><input name= "r3" id="r3" class="form-input" type="text" ></span>
+          <span><label class="form-label" >Angle</label><input value=90 name= "angle" id="angle" class="form-input" type="text" required></span>
+          <span><label class="form-label">Iterations</label><input value=4 name= "iterations" class="form-input" id="iterations" type="number" required></span>
+          <button type="submit">Generate your L-System</button>
+        </form>
+        <table>
+          <tr>
+            <td>S,D,F,G</td><td>Move turtle forward</td>
+          </tr>
+          <tr>
+            <td>+</td><td>Turn turtle to the right</td>
+          </tr>
+          <tr>
+            <td>-</td><td>Turn turtle to the left</td>
+          </tr>
+          <tr>
+            <td>[</td><td>Save current position</td>
+          </tr>
+          <tr>
+            <td>]</td><td>Return to saved location</td>
+          </tr>
+        </table>
+      </div>
+      <div id="svg-container"></div>
+      <div id="description">
+        <h2>What are L-Systems?</h2>
+        <p><a href="https://en.wikipedia.org/wiki/L-system">Lindenmayer systems</a> are a cool type of recursive grapher powered by a grammar parser and simple rules.</p>
+        <p>L systems take in strings.  Those strings contain letters and symbols that the computer knows how to act on.  The actions control the motion of a point on the screen.  Classically, this is known as <a href="https://en.wikipedia.org/wiki/Turtle_graphics">Turtle graphics.</a></p>
+        <p>Say your axiom (what you start with) is <b>A</b>, and you have two rules: <b>A=AB</b>, and <b>B=A</b>.  L systems then go over each character in the axiom and apply a rule.  In this case, we have input A, so after one iteration it becomes AB.  Then you do it again.  First character is <b>A</b> again, so you substitute <b>AB</b> for it, giving you <b>ABB</b>.  The second character of the original string is <b>B</b>, so that becomes <b>A</b>, making the string <b>ABA</b>.  Repeat that process again and you get <b>ABAAB</b>, followed by <b>ABAABABA</b> and <b>ABAABABAABAAB</b>.</p>
+        <p>This is quite possibly the first L system ever, constructed by <a href="https://en.wikipedia.org/wiki/Aristid_Lindenmayer">Aristid Lindenmayer</a> in 1968.  It happens to closely resemble the growth of algae, not a coincidence since Lindenmayer was a biologist studying cyanobacteria.  He developed L systems as a way to formally model the behavior of plants.</p>
+      </div>
     </div>
-    <div id="svg-container"></div>
 
     <script src="https://d3js.org/d3.v4.js"></script>
     <script
