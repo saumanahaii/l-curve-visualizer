@@ -5,10 +5,12 @@ body{
   margin: 0;
   font-size: 1.1em;
   line-height: 1.7em;
+  background-image: url("./img/black-thread-light.png");
 }
 
 a{
   color: #5E4C5A;
+  text-shadow: 4px 4px 5px rgba(0,0,0,0.25);
 }
 
 #top{
@@ -42,7 +44,7 @@ a{
 }
 
 #left-panel{
-  max-width: 500px;
+  max-width: 350px;
 }
 
 #left-panel table tr > td:first-child{
@@ -58,8 +60,8 @@ a{
 #system-form{
   display: flex;
   flex-direction: column;
-
   padding: 0.5em;
+  padding-top: 0;
 }
 
 #system-form span{
@@ -103,7 +105,9 @@ a{
 }
 
 #svg-container{
+  min-width: 600px;
   background: white;
+  text-align: center;
   padding: 20px;
   border-radius: 10px;
   border: 5px solid darkgrey;
@@ -111,4 +115,70 @@ a{
 
 #svg{
   justify-content: center;
+}
+
+.example-button{
+  width: 220px;
+  height: 220px;
+  border-radius: 10px 10px 0 0;
+
+}
+
+.example-box{
+  width: 220px;
+  background: #eee;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+  border: 3px solid darkgrey;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
+
+@media (max-width: 1600px){
+  #description{
+    max-width: 100%;
+  }
+
+  #left-panel{
+    max-width: calc(100% - 750px);
+  }
+
+  .form-input{
+    width: 55%;
+  }
+}
+
+@media (max-width: 1084px){
+
+
+
+  form span, table{
+    font-size: 2em;
+    line-height: 1.2em;
+  }
+
+  #left-panel, #description{
+    max-width: 100%;
+  }
+
+  #top{
+    justify-content: space-around;
+    align-content: stretch;
+  }
+
+  h1{
+    font-size: 1.2em;
+
+  }
+
+  h2{
+    font-size: 1em;
+
+  }
+
+  h3{
+    font-size: 0.8em;
+
+  }
 }

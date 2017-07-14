@@ -2,6 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
     <title>L-System Grapher</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="css.css">
@@ -9,7 +11,7 @@
   </head>
   <body>
     <div id="top">
-    <h1> D3 L System Grapher</h1><a href="http://www.zachwilliams.xyz"><h2>Go to creator's site</h2></a><h3>By Zach Williams</h3></div>
+    <h1><a href = "./index.html">D3 L System Grapher</a></h1><a href="http://www.zachwilliams.xyz"><h2>Go to creator's site</h2></a><h3>By Zach Williams</h3></div>
     <div class="row">
       <div id="left-panel">
         <form id="system-form" action="index.html" method="post">
@@ -18,10 +20,11 @@
           <span><label class="form-label">Rule 1</label><input value="F=F+F-AF-F+F" name= "r1" id="r1" class="form-input" type="text" required></span>
           <span><label class="form-label">Rule 2</label><input name= "r2" id="r2" class="form-input" type="text" ></span>
           <span><label class="form-label">Rule 3</label><input name= "r3" id="r3" class="form-input" type="text" ></span>
-          <span><label class="form-label" >Angle</label><input value=90 name= "angle" id="angle" class="form-input" type="text" required></span>
+          <span><label class="form-label" >Angle</label><input value=90 name= "angle" id="angle" class="form-input" type="number" required></span>
           <span><label class="form-label">Iterations</label><input value=4 name= "iterations" class="form-input" id="iterations" type="number" required></span>
           <button type="submit">Generate your L-System</button>
         </form>
+        <p>Use the inputs above to design your L-curve!  Click on the name to change it.  <b>Warning:</b> high iteration counts get intensive quick.  L systems grow fast!  Scale carefully, you will likely find that most won't even approach 10 iterations before bogging down.</p>
         <table>
           <tr>
             <td>S,D,F,G</td><td>Move turtle forward</td>
@@ -40,13 +43,23 @@
           </tr>
         </table>
       </div>
-      <div id="svg-container"></div>
+      <div id="svg-container"><h3 contenteditable="true" id="system-name">Koch Curve</h3></div>
       <div id="description">
         <h2>What are L-Systems?</h2>
         <p><a href="https://en.wikipedia.org/wiki/L-system">Lindenmayer systems</a> are a cool type of recursive grapher powered by a grammar parser and simple rules.</p>
         <p>L systems take in strings.  Those strings contain letters and symbols that the computer knows how to act on.  The actions control the motion of a point on the screen.  Classically, this is known as <a href="https://en.wikipedia.org/wiki/Turtle_graphics">Turtle graphics.</a></p>
         <p>Say your axiom (what you start with) is <b>A</b>, and you have two rules: <b>A=AB</b>, and <b>B=A</b>.  L systems then go over each character in the axiom and apply a rule.  In this case, we have input A, so after one iteration it becomes AB.  Then you do it again.  First character is <b>A</b> again, so you substitute <b>AB</b> for it, giving you <b>ABB</b>.  The second character of the original string is <b>B</b>, so that becomes <b>A</b>, making the string <b>ABA</b>.  Repeat that process again and you get <b>ABAAB</b>, followed by <b>ABAABABA</b> and <b>ABAABABAABAAB</b>.</p>
         <p>This is quite possibly the first L system ever, constructed by <a href="https://en.wikipedia.org/wiki/Aristid_Lindenmayer">Aristid Lindenmayer</a> in 1968.  It happens to closely resemble the growth of algae, not a coincidence since Lindenmayer was a biologist studying cyanobacteria.  He developed L systems as a way to formally model the behavior of plants.</p>
+      </div>
+      <p>If you find this interesting, checkout <a href="http://algorithmicbotany.org/papers/abop/abop-ch1.pdf">The Algorithmic Beauty of Plants (chapter one)</a>, a book on computational botany that has lots of examples of L systems and far more rigorous explanations.</p>
+      <div class="row" id="examples">
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~f-g-g&r1~f=f-g+f+g-f&r2~g=gg&r3~&angle~120&iterations~4&system-name~Sierpinski%20Triangle%20(Recursive%20Triforce)' onClick="gotoAddress(this)" src="./img/sierpinski.png"></input><p>Sierpinski Triangle</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~x&r1~x=f[-x][x]f[-x]+fx&r2~f=ff&r3~&angle~25&iterations~5&system-name~Fractal%20Plant' onClick="gotoAddress(this)" src="./img/fractalPlant.png"></input><p>Fractal Plant</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~fx&r1~x=x+yf+&r2~y=-fx-y&r3~&angle~90&iterations~10&system-name~Dragon%20Curve' onClick="gotoAddress(this)" src="./img/dragon.png"></input><p>Dragon Curve</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~xyxyxyx+xyxyxyx+xyxyxyx+xyxyxyx&r1~f=&r2~x=fx+fx+fxfy-fy-&r3~y=+fx+fxfy-fy-fy&angle~90&iterations~3&system-name~Fractal%20Maze%20Thing' onClick="gotoAddress(this)" src="./img/fractalMaze.png"></input><p>Fractal Maze</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~f&r1~f=+g-f-g+&r2~g=-f+g+f-&r3~&angle~60&iterations~7&system-name~Arrowhead%20Curve%20Sierpinski%20Triangle' onClick="gotoAddress(this)" src="./img/sierpinskiArrowhead.png"></input><p>Arrowhead Sierpinski Curve</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~f&r1~g=gg&r2~f=g[-f]+f&r3~&angle~45&iterations~8&system-name~Fractal%20Tree%20(Broccoli%20Simulator)' onClick="gotoAddress(this)" src="./img/fractalTree.png"></input><p>Fractal Tree</p></div>
+
       </div>
     </div>
 

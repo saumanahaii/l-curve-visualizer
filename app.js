@@ -7,7 +7,24 @@ Basic grammar:
   "]" recall location
 */
 
+
+let gotoAddress= (e) =>{
+
+  window.location = window.location.pathname + e.value;
+}
+
 let urlArguments = window.location.search.substring(1).split("&");
+urlArguments = urlArguments.forEach((el)=>{
+  let args = el.split("~");
+  if(args[0]!== ""){
+    if(args[0]!=="system-name") $(`#${args[0]}`).val(args[1]);
+    else if(args[0]=="system-name") $(`#${args[0]}`).text(decodeURI(args[1]));
+  }
+})
+$(document).ready(()=>$("form").submit());
+
+//select the fields and populate from the url
+
 
 
 let lSystem;
@@ -34,6 +51,7 @@ class LSystem{
     this.res = system.axiom;
     this.lines = [];
     this.dir = 0;
+    this.activeColor = "black";
     this.length = 20;
     this.head = {x:0,y:0}
     this.locationStack = [];
@@ -114,9 +132,9 @@ class LSystem{
     let diffX = this.xDim.max - this.xDim.min;
     let diffY = this.yDim.max - this.yDim.min;
     let scaleFactor = diffX > diffY ? 600/diffX : 600/diffY;
+    scaleFactor *= 0.99;
     let midX = (diffX/2);
     let midY =(diffY/2);
-    console.log(`scaleFactor:${scaleFactor}`)
     //useful because now I can translate to the middle of both and add it to the values below
     //then find out out much is outside the window and scale appropriately
 
@@ -124,11 +142,12 @@ class LSystem{
 
     d3.select("#svg").selectAll("line").data(data).enter()
     .insert("line")
+    .attr("stroke-width", 1)
     .attr("stroke", "rgba(0,0,0,0.3)")
-    .attr("x1", (d,i)=>(d.x1*scaleFactor)-(this.xDim.min*scaleFactor))
-    .attr("x2", (d,i)=>(d.x2*scaleFactor)-(this.xDim.min*scaleFactor))
-    .attr("y1", (d,i)=>(d.y1*scaleFactor)-(this.yDim.min*scaleFactor))
-    .attr("y2", (d,i)=>(d.y2*scaleFactor)-(this.yDim.min*scaleFactor));
+    .attr("x1", (d,i)=>(d.x1*scaleFactor+1)-(this.xDim.min*scaleFactor))
+    .attr("x2", (d,i)=>(d.x2*scaleFactor+1)-(this.xDim.min*scaleFactor))
+    .attr("y1", (d,i)=>(d.y1*scaleFactor+1)-(this.yDim.min*scaleFactor))
+    .attr("y2", (d,i)=>(d.y2*scaleFactor+1)-(this.yDim.min*scaleFactor));
   }
 }
 
@@ -147,7 +166,7 @@ $("#system-form").on("submit", function(e){
   //declare a accumulator for the url bar
   let acc = "";
   e.preventDefault();
-  $("input").each(function(index, field){
+  $(".form-input").each(function(index, field){
     if(field.name[0]=== "r"){
       let rule = field.value.toLowerCase().split("=");
       system.rules.push({t:rule[0],v:rule[1]})
@@ -155,10 +174,11 @@ $("#system-form").on("submit", function(e){
     if(typeof field.value === "string") field.value = field.value.toLowerCase();
     system[field.name] = field.value;
     //stick it in the address bar
-    acc+= `${field.name}~${field.value}`
+    acc+= `${field.name}~${field.value}&`;
   });
-//  window.history.pushState()
-//console.log(window.history);
+  system.name = $("#system-name").text();
+  acc+= `system-name~${system.name}`;
+  window.history.pushState({}, "", "?"+acc);
 
   lSystem = new LSystem(system);
   let lines = lSystem.runIterationsAndReturnLines();
