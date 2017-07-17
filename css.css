@@ -8,6 +8,17 @@ body{
   background-image: url("./img/black-thread-light.png");
 }
 
+footer{
+  background: white;
+  border-top: 2px solid darkgrey;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 10px;
+  padding-right: 10px;
+  align-items: center;
+}
+
 a{
   color: #5E4C5A;
   text-shadow: 4px 4px 5px rgba(0,0,0,0.25);

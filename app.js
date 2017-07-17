@@ -1,4 +1,10 @@
 /**
+Code written by Zachary Williams.
+Its been acting pretty sad lately, so feel free to give it a good home.
+In other words, this is
+*/
+
+/**
 Basic grammar:
   "F": move forward
   "+" rotate right
@@ -37,7 +43,8 @@ let system = {
   r2: null,
   angle: null,
   rules: [],
-  dimensions: {x: 600, y:600}
+  dimensions: {x: 600, y:600},
+  delay: 0
 }
 
 d3.select("#svg-container").append("svg:svg").attr("width", system.dimensions.x).attr("height", system.dimensions.y).attr("id", "svg").attr("transform","rotate(-90)");
@@ -51,13 +58,15 @@ class LSystem{
     this.res = system.axiom;
     this.lines = [];
     this.dir = 0;
-    this.activeColor = "black";
+    this.activeColor = "rgba(0,0,0,0.3)";
     this.length = 20;
     this.head = {x:0,y:0}
     this.locationStack = [];
     this.rules = system.rules;
+    this.delay = system.delay;
     this.xDim = {min:this.head.x,max:this.head.x}
     this.yDim = {min:this.head.y,max:this.head.y}
+
   }
 
   runIterationsAndReturnLines(count = this.iterations){
@@ -93,26 +102,39 @@ class LSystem{
     str.split("").forEach((el,i)=>{
       if(el==="+") this.dir += this.angle;
       else if(el==="-") this.dir -= this.angle;
-      else if(el==="[") this.locationStack.push(Object.assign({}, this.head, {dir: this.dir}));
+      else if(el==="[") this.locationStack.push(Object.assign({}, this.head, {dir: this.dir, color: this.activeColor}));
       else if(el==="]"){
         let prev = this.locationStack.pop();
         this.head = prev;
         this.dir = prev.dir;
+        this.activeColor = prev.color;
       }
-      else if(["s","d","f","g"].indexOf(el) !== -1) {
+      else if(el==="0"){
+        this.activeColor = "rgba(0,0,0,0.3)";
+      }
+      else if(el==="1"){
+        this.activeColor = "rgba(128,128,0,0.4)";
+      }
+      else if(el==="2"){
+        this.activeColor = "rgba(124,248,124,0.4)";
+      }
+      else if(el==="3"){
+        this.activeColor = "rgba(255,69,0,0.4)";
+      }
+      else if(["s","d","f","g", "a"].indexOf(el) !== -1) {
         //create line from current position to next, then move the current pos to next
 
         let nextX = this.head.x + this.length*Math.cos(this.dir);
         let nextY = this.head.y + this.length*Math.sin(this.dir);
-
         this.lines.push(
           {
             x1:this.head.x,
             y1:this.head.y,
             x2: nextX,
-            y2: nextY
+            y2: nextY,
+            color: this.activeColor
           }
-        )
+        );
 
         if(this.head.x < this.xDim.min) this.xDim.min = this.head.x;
         if(this.head.x > this.xDim.max) this.xDim.max = this.head.x;
@@ -140,14 +162,19 @@ class LSystem{
 
 
 
-    d3.select("#svg").selectAll("line").data(data).enter()
+    let x = d3.select("#svg").selectAll("line").data(data).enter()
     .insert("line")
-    .attr("stroke-width", 1)
-    .attr("stroke", "rgba(0,0,0,0.3)")
+    .attr("stroke-width", 0)
+    .attr("stroke", (d,i)=>{
+
+      return d.color})
     .attr("x1", (d,i)=>(d.x1*scaleFactor+1)-(this.xDim.min*scaleFactor))
     .attr("x2", (d,i)=>(d.x2*scaleFactor+1)-(this.xDim.min*scaleFactor))
     .attr("y1", (d,i)=>(d.y1*scaleFactor+1)-(this.yDim.min*scaleFactor))
-    .attr("y2", (d,i)=>(d.y2*scaleFactor+1)-(this.yDim.min*scaleFactor));
+    .attr("y2", (d,i)=>(d.y2*scaleFactor+1)-(this.yDim.min*scaleFactor))
+
+    x.transition().duration(250).delay((d,i)=>i*this.delay)
+    .attr("stroke-width", 1)
   }
 }
 
@@ -177,6 +204,7 @@ $("#system-form").on("submit", function(e){
     acc+= `${field.name}~${field.value}&`;
   });
   system.name = $("#system-name").text();
+
   acc+= `system-name~${system.name}`;
   window.history.pushState({}, "", "?"+acc);
 

@@ -17,17 +17,18 @@
         <form id="system-form" action="index.html" method="post">
 
           <span><label class="form-label">Axiom</label><input value="-f" name= "axiom" class="form-input" id="axiom" type="text" required></span>
-          <span><label class="form-label">Rule 1</label><input value="F=F+F-AF-F+F" name= "r1" id="r1" class="form-input" type="text" required></span>
+          <span><label class="form-label">Rule 1</label><input value="F=F+F-F-F+F" name= "r1" id="r1" class="form-input" type="text" required></span>
           <span><label class="form-label">Rule 2</label><input name= "r2" id="r2" class="form-input" type="text" ></span>
           <span><label class="form-label">Rule 3</label><input name= "r3" id="r3" class="form-input" type="text" ></span>
           <span><label class="form-label" >Angle</label><input value=90 name= "angle" id="angle" class="form-input" type="number" required></span>
           <span><label class="form-label">Iterations</label><input value=4 name= "iterations" class="form-input" id="iterations" type="number" required></span>
+          <span><label class="form-label">Delay</label><input value=0 name= "delay" class="form-input" id="delay" type="number" required></span>
           <button type="submit">Generate your L-System</button>
         </form>
-        <p>Use the inputs above to design your L-curve!  Click on the name to change it.  <b>Warning:</b> high iteration counts get intensive quick.  L systems grow fast!  Scale carefully, you will likely find that most won't even approach 10 iterations before bogging down.</p>
+        <p>Use the inputs above to design your L-curve!  Use the delay to delay the drawing of each segment by milliseconds.  Click on the name to change it.  <b>Warning:</b> high iteration counts get intensive quick.  L systems grow fast!  Scale iteration count carefully.</p>
         <table>
           <tr>
-            <td>S,D,F,G</td><td>Move turtle forward</td>
+            <td>A,S,D,F,G</td><td>Move turtle forward</td>
           </tr>
           <tr>
             <td>+</td><td>Turn turtle to the right</td>
@@ -40,6 +41,9 @@
           </tr>
           <tr>
             <td>]</td><td>Return to saved location</td>
+          </tr>
+          <tr>
+            <td>0,1,2,3</td><td>Color line black, brown, green, red, respectively.</td>
           </tr>
         </table>
       </div>
@@ -54,11 +58,27 @@
       <p>If you find this interesting, checkout <a href="http://algorithmicbotany.org/papers/abop/abop-ch1.pdf">The Algorithmic Beauty of Plants (chapter one)</a>, a book on computational botany that has lots of examples of L systems and far more rigorous explanations.</p>
       <div class="row" id="examples">
         <div class="example-box"><input class="example-button" type="image" value='?axiom~f-g-g&r1~f=f-g+f+g-f&r2~g=gg&r3~&angle~120&iterations~4&system-name~Sierpinski%20Triangle%20(Recursive%20Triforce)' onClick="gotoAddress(this)" src="./img/sierpinski.png"></input><p>Sierpinski Triangle</p></div>
-        <div class="example-box"><input class="example-button" type="image" value='?axiom~x&r1~x=f[-x][x]f[-x]+fx&r2~f=ff&r3~&angle~25&iterations~5&system-name~Fractal%20Plant' onClick="gotoAddress(this)" src="./img/fractalPlant.png"></input><p>Fractal Plant</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~x&r1~x=2f-[3[x]+2x]+1f[2+fx]-x&r2~f=ff&r3~&angle~25&iterations~6&system-name~Fractal%20Plant' onClick="gotoAddress(this)" src="./img/fractalPlant.png"></input><p>Fractal Plant</p></div>
         <div class="example-box"><input class="example-button" type="image" value='?axiom~fx&r1~x=x+yf+&r2~y=-fx-y&r3~&angle~90&iterations~10&system-name~Dragon%20Curve' onClick="gotoAddress(this)" src="./img/dragon.png"></input><p>Dragon Curve</p></div>
         <div class="example-box"><input class="example-button" type="image" value='?axiom~xyxyxyx+xyxyxyx+xyxyxyx+xyxyxyx&r1~f=&r2~x=fx+fx+fxfy-fy-&r3~y=+fx+fxfy-fy-fy&angle~90&iterations~3&system-name~Fractal%20Maze%20Thing' onClick="gotoAddress(this)" src="./img/fractalMaze.png"></input><p>Fractal Maze</p></div>
         <div class="example-box"><input class="example-button" type="image" value='?axiom~f&r1~f=+g-f-g+&r2~g=-f+g+f-&r3~&angle~60&iterations~7&system-name~Arrowhead%20Curve%20Sierpinski%20Triangle' onClick="gotoAddress(this)" src="./img/sierpinskiArrowhead.png"></input><p>Arrowhead Sierpinski Curve</p></div>
         <div class="example-box"><input class="example-button" type="image" value='?axiom~f&r1~g=gg&r2~f=g[-f]+f&r3~&angle~45&iterations~8&system-name~Fractal%20Tree%20(Broccoli%20Simulator)' onClick="gotoAddress(this)" src="./img/fractalTree.png"></input><p>Fractal Tree</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~f-f-f-f&r1~f=3ff-2f--1ff-3f&r2~&r3~&angle~90&iterations~4&system-name~Geometric%20Snowflake' onClick="gotoAddress(this)" src="./img/redSnowflake.png"></input><p>Red Snowflake</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~x&r1~x=x+yf++yf-fx--fxfx-yf+&r2~y=-fx+yfyf++yf+fx--fx-y&r3~&angle~60&iterations~4&system-name~Peano-Gosper%20curve' onClick="gotoAddress(this)" src="./img/peanoGosper.png"></input><p>Peano-Gosper Curve</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~g&r1~g=+dfff-gfffg-fffd+&r2~d=-gfff+dfffd+fffg-&r3~&angle~90&iterations~5&system-name~Hilbert%20Curve' onClick="gotoAddress(this)" src="./img/hilbert.png"></input><p>Hilbert Curve</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~b--g--b--g&r1~b=+d-f-d+&r2~d=-b+f+b-&r3~&angle~45&iterations~6&system-name~Fractal%20Snowflake' onClick="gotoAddress(this)" src="./img/fractalSnowflake.png"></input><p>Fractal Snowflake</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~x&r1~x=xfyfx+f+yfxfy-f-xfyfx&r2~y=yfxfy-f-xfyfx+f+yfxfy&r3~&angle~90&iterations~3&system-name~Hilbert%20Curve%202' onClick="gotoAddress(this)" src="./img/hilbert2.png"></input><p>Hilbert Curve 2</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~f+f+f+f&r1~f=-f+f-f-f+f+ff-f+f+ff+f-f-ff+ff-ff+f+f-ff-f-f+ff-f-f+f+f-f+&r2~&r3~&angle~90&iterations~2&system-name~32%20Element%20Curve' onClick="gotoAddress(this)" src="./img/32Element.png"></input><p>32 Element Curve</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~3f+0f+3f+0f&r1~f=ff+f-f+f+ff&r2~&r3~&angle~90&iterations~4&system-name~Square%20Curve%20Interference' onClick="gotoAddress(this)" src="./img/squareInterference.png"></input><p>Square Curve Interference</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~+f--f--f&r1~f=f+f--f+f&r2~&r3~&angle~60&iterations~4&system-name~Koch%20Snowflake' onClick="gotoAddress(this)" src="./img/kochSnowflake.png"></input><p>Koch Snowflake</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~++f&r1~f=ff-1[sd]+1[sd]&r2~s=+2fd&r3~d=-2fs&angle~20&iterations~6&system-name~Stringy%20Plant' onClick="gotoAddress(this)" src="./img/stringyPlant.png"></input><p>Stringy Plant</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~fx&r1~f=bff-[c1-f+f]+[2+f-f]&r2~x=bff+[1+f]+[3-f]&r3~&angle~25&iterations~5&system-name~Bushy%20Plant' onClick="gotoAddress(this)" src="./img/bushyPlant.png"></input><p>Bushy Plant</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~f&r1~f=1ff-[1-f+f+f]+[2+f-f-f]&r2~&r3~&angle~23&iterations~5&system-name~Bushy%20Plant%202' onClick="gotoAddress(this)" src="./img/bushyPlant2.png"></input><p>Bushy Plant 2</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~1f&r1~f=f[+f[+f][-f]f][-f[2+f][-f]f]f[2+f][-f]f&r2~&r3~&angle~30&iterations~4&system-name~Fractal%20Plant%202' onClick="gotoAddress(this)" src="./img/fractalPlant2.png"></input><p>Fractal Plant 2</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~x&r1~x=1f[+x]2[-x]2fx&r2~f=ff&r3~&angle~25&iterations~9&system-name~Pretty%20Tree' onClick="gotoAddress(this)" src="./img/prettyTree.png"></input><p>Pretty Tree</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~f-f-f-f&r1~f=ff-f-f-f-f-f+f&r2~&r3~&angle~90&iterations~4&system-name~Another%20Fractal' onClick="gotoAddress(this)" src="./img/anotherFractal.png"></input><p>anotherFractal</p></div>
+        <div class="example-box"><input class="example-button" type="image" value='?axiom~f-f-f-f&r1~f=ff-f--f-f&r2~&r3~&angle~90&iterations~4&system-name~Square%20Division' onClick="gotoAddress(this)" src="./img/squareDivision.png"></input><p>Divided Square</p></div>
+
 
       </div>
     </div>
@@ -69,6 +89,12 @@
   integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
   crossorigin="anonymous"></script>
   <script src="app.js" charset="utf-8"></script>
+  <footer>
+
+
+      <span><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a> Zach Williams</span>
+      <a href="https://github.com/saumanahaii/l-curve-visualizer">Get the source</a>
+  </footer>
   </body>
 
 
