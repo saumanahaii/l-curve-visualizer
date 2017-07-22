@@ -68,7 +68,7 @@ class LSystem{
     this.res = system.axiom;
     this.lines = [];
     this.dir = 0;
-    this.activeColor = "rgba(0,0,0,0.3)";
+    this.activeColor = colors[0];
     this.length = 20;
     this.head = {x:0,y:0}
     this.locationStack = [];
@@ -209,8 +209,8 @@ $("#system-form").on("submit", function(e){
   acc+= `system-name~${system.name}`;
   window.history.pushState({}, "", "?"+acc);
 
-  let lSystem = new LSystem(system);
-  let lines = lSystem.runIterationsAndReturnLines();
+  const lSystem = new LSystem(system);
+  const lines = lSystem.runIterationsAndReturnLines();
   lSystem.render(lSystem.lines,"#svg");
   console.dir(lSystem)
 });
