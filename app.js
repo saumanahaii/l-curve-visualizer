@@ -6,21 +6,32 @@ In other words, this is
 
 /**
 Basic grammar:
-  "F": move forward
+  "a, s, d, f, g": move forward
   "+" rotate right
   "-" rotate left
   "[" save location
   "]" recall location
+  "0" color line black
+  "1" color line brown
+  "2" color line green
+  "3" color line red
 */
 
 
-let gotoAddress= (e) =>{
-
+const gotoAddress = (e) =>{
   window.location = window.location.pathname + e.value;
 }
 
-let urlArguments = window.location.search.substring(1).split("&");
-urlArguments = urlArguments.forEach((el)=>{
+const colors = [
+  "rgba(0,0,0,0.3)",
+  "rgba(128,128,0,0.4)",
+  "rgba(124,248,124,0.4)",
+  "rgba(255,69,0,0.4)"
+]
+
+const urlArguments = window.location.search.substring(1).split("&");
+urlArguments.forEach((el)=>{
+  el = el.replace(/ /g, '')
   let args = el.split("~");
   if(args[0]!== ""){
     if(args[0]!=="system-name") $(`#${args[0]}`).val(args[1]);
@@ -30,10 +41,6 @@ urlArguments = urlArguments.forEach((el)=>{
 $(document).ready(()=>$("form").submit());
 
 //select the fields and populate from the url
-
-
-
-let lSystem;
 
 let system = {
   iterations: 0,
@@ -47,7 +54,10 @@ let system = {
   delay: 0
 }
 
-d3.select("#svg-container").append("svg:svg").attr("width", system.dimensions.x).attr("height", system.dimensions.y).attr("id", "svg").attr("transform","rotate(-90)");
+d3.select("#svg-container").append("svg:svg")
+.attr("width", system.dimensions.x)
+.attr("height", system.dimensions.y)
+.attr("id", "svg").attr("transform","rotate(-90)");
 
 class LSystem{
   constructor(system){
@@ -58,7 +68,7 @@ class LSystem{
     this.res = system.axiom;
     this.lines = [];
     this.dir = 0;
-    this.activeColor = "rgba(0,0,0,0.3)";
+    this.activeColor = colors[0];
     this.length = 20;
     this.head = {x:0,y:0}
     this.locationStack = [];
@@ -70,7 +80,7 @@ class LSystem{
   }
 
   runIterationsAndReturnLines(count = this.iterations){
-    for(let i = 0; i< count; i++){
+    for(let i = 0; i < count; i++){
       this.res = this.iterate(this.res);
     }
     return this.generateLines(this.res);
@@ -83,7 +93,6 @@ class LSystem{
       let ruleApplied = false;
       for(let i=0; i< this.rules.length; i++){
         let rule = this.rules[i];
-
           if(el === rule.t){
             ruleApplied = true;
             acc += rule.v;
@@ -109,17 +118,8 @@ class LSystem{
         this.dir = prev.dir;
         this.activeColor = prev.color;
       }
-      else if(el==="0"){
-        this.activeColor = "rgba(0,0,0,0.3)";
-      }
-      else if(el==="1"){
-        this.activeColor = "rgba(128,128,0,0.4)";
-      }
-      else if(el==="2"){
-        this.activeColor = "rgba(124,248,124,0.4)";
-      }
-      else if(el==="3"){
-        this.activeColor = "rgba(255,69,0,0.4)";
+      else if(Number.isInteger(parseInt(el))) {
+        this.activeColor = colors[parseInt(el)];
       }
       else if(["s","d","f","g", "a"].indexOf(el) !== -1) {
         //create line from current position to next, then move the current pos to next
@@ -194,6 +194,7 @@ $("#system-form").on("submit", function(e){
   let acc = "";
   e.preventDefault();
   $(".form-input").each(function(index, field){
+    field.value = field.value.replace(/\s/g, '');
     if(field.name[0]=== "r"){
       let rule = field.value.toLowerCase().split("=");
       system.rules.push({t:rule[0],v:rule[1]})
@@ -208,8 +209,8 @@ $("#system-form").on("submit", function(e){
   acc+= `system-name~${system.name}`;
   window.history.pushState({}, "", "?"+acc);
 
-  lSystem = new LSystem(system);
-  let lines = lSystem.runIterationsAndReturnLines();
+  const lSystem = new LSystem(system);
+  const lines = lSystem.runIterationsAndReturnLines();
   lSystem.render(lSystem.lines,"#svg");
   console.dir(lSystem)
 });
