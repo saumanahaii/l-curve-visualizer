@@ -1,5 +1,5 @@
 # L-Curve-Visualizer
-A simple L System visualizer based on Javascript and D3.
+A simple L System visualizer based on Javascript and D3.  You can see it in action [here](http://lsystem.bitballoon.com/?axiom~-f&r1~f=f+f-f-f+f&r2~&r3~&angle~90&iterations~4&delay~0&system-name~Koch%20Curve)!
 
 ### Featuring
 * multiple rules
