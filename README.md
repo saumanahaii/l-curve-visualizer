@@ -16,3 +16,4 @@ Feel free to take the code and customize it as you see fit.  Deploy it however a
 
 Whatever you do, have fun with it!  L systems are fascinating and worth experimenting with.
 ![An L system plant](http://i.imgur.com/BKNRolT.gif)
+Visit the creator's website [here](http://www.zachwilliams.xyz)
